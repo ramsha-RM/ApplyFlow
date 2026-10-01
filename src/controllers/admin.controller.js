@@ -1,7 +1,7 @@
 import User from "../models/auth.model.js";
 import Application from "../models/application.model.js";
 
-const ALLOWED_ROLES = ["admin", "applicant", "employer"];
+const ALLOWED_ROLES = ["admin", "candidate", "employer"];
 
 export const getAllUsers = async (req, res) => {
   try {

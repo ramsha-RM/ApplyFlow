@@ -138,10 +138,7 @@ export const updateJob = async (req, res) => {
         message: "Job not found",
       });
     }
-console.log("Job ID:", job._id);
-console.log("Job createdBy:", job.createdBy);
-console.log("Logged-in user:", req.user._id);
-console.log("Same owner:", job.createdBy.toString() === req.user._id.toString());
+
     if (job.createdBy.toString() !== req.user._id.toString()) {
       return res.status(403).json({
         success: false,
@@ -149,7 +146,34 @@ console.log("Same owner:", job.createdBy.toString() === req.user._id.toString())
       });
     }
 
-    const updatedJob = await Job.findByIdAndUpdate(id, req.body, {
+    // Prevent updating protected fields from client input
+    const allowedFields = [
+      "title",
+      "company",
+      "description",
+      "requirements",
+      "location",
+      "jobType",
+      "salaryRange",
+      "experienceLevel",
+      "deadline",
+      "status",
+      "skills",
+      "benefits",
+      "applicationUrl",
+      "isRemote",
+      "category",
+      "openings",
+    ];
+
+    const updateData = {};
+    allowedFields.forEach((f) => {
+      if (Object.prototype.hasOwnProperty.call(req.body, f)) {
+        updateData[f] = req.body[f];
+      }
+    });
+
+    const updatedJob = await Job.findByIdAndUpdate(id, updateData, {
       new: true,
       runValidators: true,
     });

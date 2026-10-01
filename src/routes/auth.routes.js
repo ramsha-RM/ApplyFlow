@@ -1,14 +1,18 @@
 import express from "express";
-import { register, login, getMe, changePassword } from "../controllers/auth.controller.js";
+import { googleLogin, googleCallback, register, login, getMe, changePassword } from "../controllers/auth.controller.js";
 import { protect } from "../middleware/auth.middleware.js";
+
 import {
   validate,
   registerValidator,
   loginValidator,
   changePasswordValidator,
 } from "../middleware/validation.middleware.js";
+
 const router = express.Router();
 
+router.get("/google-login", googleLogin);
+router.get("/google-callback", googleCallback);
 router.post("/register", registerValidator, validate, register);
 router.post("/login", loginValidator, validate, login);
 router.get("/me", protect, getMe);
